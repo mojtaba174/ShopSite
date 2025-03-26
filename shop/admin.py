@@ -18,6 +18,7 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
 
 
+admin.site.register(models.Color)
 admin.site.register(models.ProductImage)
 admin.site.register(models.Category)
 admin.site.register(models.Brand)

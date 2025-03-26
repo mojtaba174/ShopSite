@@ -16,11 +16,19 @@ class Category(models.Model):
         return self.name
 
 
+class Color(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    hex_code = models.CharField(max_length=7, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     title = models.CharField(max_length=200)
     price = models.IntegerField()
     quantity = models.IntegerField()
-    colors = models.JSONField(default=list)
+    colors = models.ManyToManyField(Color, blank=True)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField(max_length=500)
