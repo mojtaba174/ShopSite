@@ -82,7 +82,7 @@
                             <hr>
                             <h3>{{ product.price|intcomma }} تومان</h3>
                             <div class="btn-single">
-                                <a href="#"><i class="fa fa-cart-plus"></i>خرید آنلاین</a>
+                                <a href="{% url 'shop:add_to_cart' product.slug %}?next={{ request.path }}"><i class="fa fa-cart-plus"></i>خرید آنلاین</a>
                             </div>
                         </div>
                         <div class="col-md-5">

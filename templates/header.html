@@ -26,7 +26,7 @@
                      <a href="{% url 'accounts:logout_page' %}?next={{ request.path }}" class="mybtn"><i class="fa fa-user-o"></i>خروج از حساب</a>
                       {% endif %}
 
-                     <a href="#" class="mybtn"><i class="fa fa-cart-arrow-down"></i>سبد</a>  				
+                     <a href="{% url 'shop:cart_page' %}" class="mybtn"><i class="fa fa-cart-arrow-down"></i>سبد</a>  				
                   </div>
                </div>
                <div class="col-md-6">
