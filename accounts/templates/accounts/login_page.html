@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}ورود به سایت{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+      <div class="col-12 col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+              <!-- username input -->
+              <div class="form-outline mb-4">
+                <label class="form-label" for="form2Example1">Username</label>
+                  {{ form.username }}
+              </div>
+
+              <!-- Password input -->
+              <div class="form-outline mb-4">
+                <label class="form-label" for="form2Example2">Password</label>
+                {{ form.password }}
+              </div>
+
+              <!-- 2 column grid layout for inline styling -->
+              <div class="row mb-4">
+                <div class="col d-flex justify-content-start">
+                  <!-- Checkbox -->
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
+                    <label class="form-check-label" for="form2Example31"> منو یادت باشه! </label>
+                  </div>
+                </div>
+                <div class="col text-end">
+                  <!-- Simple link -->
+                  <a href="#!">فراموشی رمز عبور</a>
+                </div>
+              </div>
+
+              <!-- Submit button -->
+              <button type="submit" class="btn btn-primary w-100 mb-4">ورود</button>
+
+              <!-- Register buttons -->
+              <div class="text-center">
+                <p>عضو نیستی ؟ <a href="#!">ثبت نام</a></p>
+                <p>ورود با :</p>
+                <div>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-facebook-f"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-google"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-twitter"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-github"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

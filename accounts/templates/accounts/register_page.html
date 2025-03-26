@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}ورود به سایت{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+      <div class="col-12 col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="username_field">Username</label>
+                  {{ form.username }}
+                  {{ form.username.errors }}
+              </div>
+
+                <div class="form-outline mb-4">
+                <label class="form-label" for="email_field">Email address</label>
+                  {{ form.email }}
+                    {{ form.email.errors }}
+              </div>
+              <div class="form-outline mb-4">
+                <label class="form-label" for="firstname_field">Firstname</label>
+                  {{ form.first_name }}
+              </div>
+                <div class="form-outline mb-4">
+                <label class="form-label" for="lastname_field">Lastname</label>
+                  {{ form.last_name }}
+              </div>
+              <div class="form-outline mb-4">
+                <label class="form-label" for="password1_field">Password</label>
+                {{ form.password_1 }}
+                  {{ form.password_1.errors }}
+              </div>
+                <div class="form-outline mb-4">
+                <label class="form-label" for="password2_field">Confirm Password</label>
+                {{ form.password_2 }}
+                    {{ form.password_2.errors }}
+              </div>
+
+              <div class="row mb-4">
+                <div class="col d-flex justify-content-start">
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
+                    <label class="form-check-label" for="form2Example31"> منو یادت باشه! </label>
+                  </div>
+                </div>
+
+              </div>
+
+
+              <button type="submit" class="btn btn-primary w-100 mb-4">ثبت نام</button>
+
+
+              <div class="text-center">
+                <p>ورود با :</p>
+                <div>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-facebook-f"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-google"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-twitter"></i>
+                  </button>
+                  <button type="button" class="btn btn-link btn-floating mx-1">
+                    <i class="fab fa-github"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
