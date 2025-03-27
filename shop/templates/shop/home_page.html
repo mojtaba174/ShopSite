@@ -155,7 +155,7 @@
                                                     class="w-100" alt="{% static 'img/default.png' %}"/></a>
                                 </figure>
                                 <h5>{{ product.title }}</h5>
-                                <span>{{ product.price|intcomma }} تومان</span>
+                                <span>{% with product.variants.all|dictsort:'price'|first as min_price_variant %}{{ min_price_variant.price|intcomma }}{% endwith %} تومان</span>
                             </div>
                         {% endfor %}
 

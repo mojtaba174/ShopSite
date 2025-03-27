@@ -43,7 +43,6 @@ class Cart:
     def __iter__(self):
 
         cart_items = self.cart.copy()
-        print(" Debug - cart keys:", cart_items.keys())
         product_variant_ids = [key.split("-") for key in cart_items.keys()]
 
         product_ids = {pid for pid, _ in product_variant_ids}

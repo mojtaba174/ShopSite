@@ -81,7 +81,8 @@
                                                             <input type="radio" name="variant_id"
                                                                    value="{{ variant.id }}"
                                                                    data-price="{{ variant.price }}"
-                                                                   onchange="updatePrice(this)">
+                                                                   onchange="updatePrice(this)"
+                                                                    checked>
                                                             <span style="display: inline-block; width: 30px; height: 30px; background-color: {{ variant.color.hex_code }}; border-radius: 50%; border: 1px solid #000;"></span>
                                                             {{ variant.color.name }} ({{ variant.quantity }} عدد موجود)
                                                         </label><br>
