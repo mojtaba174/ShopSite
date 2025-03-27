@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
-{% block title %}{{ products.first.category }}{% endblock %}
+{% block title %}{% with products.first as first%}{{ first.category.name }}{% endwith %}{% endblock %}
 
 {% block content %}
     <div class="container">
         <div class="row">
             <div class="col-md-12">
 
-                    <h4>موبایل و تبلت</h4>
+                    <h4>{{ products.first.category.name }}</h4>
                     <div class="owl-carousel owl-theme ov2">
                         {% for product in products %}
                             <div class="item">
@@ -19,6 +19,8 @@
                                 <h5>{{ product.title }}</h5>
                                 <span>{% with product.variants.all|dictsort:'price'|first as min_price_variant %}{{ min_price_variant.price|intcomma }}{% endwith %} تومان</span>
                             </div>
+                            {% empty %}
+                            <h5>هیچ محصولی یافت نشد!</h5>
                         {% endfor %}
 
                     </div>
