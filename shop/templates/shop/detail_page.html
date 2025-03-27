@@ -40,6 +40,14 @@
             object-fit: contain;
             background-color: #f8f9fa;
         }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background-color: #f1f1f1;
+        }
     </style>
     <form method="post" action="{% url 'shop:add_to_cart' product.slug%}?next={{ request.path }}">
         {% csrf_token %}
@@ -241,11 +249,75 @@
                             {% endfor %}
                         </div>
                         <div id="two" class="tab-pane fade">
-                            نظری وجود ندارد...
+                            <div id="comments-list">
+                                {% for comment in comments %}
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ comment.user.username }}</h5>
+                                        <p class="card-text">{{ comment.content }}</p>
+                                        <p class="text-muted">{{ comment.created_at|date:"Y-m-d H:i" }}</p>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <p>هنوز کامنتی وجود ندارد.</p>
+                                {% endfor %}
+                            </div>
+
+                            <!-- فرم ارسال کامنت -->
+                            {% if user.is_authenticated %}
+                           <form id="comment-form" method="post" action="{% url 'add_comment' product.slug %}">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-primary">ارسال نظر</button>
+                            </form>
+                            {% else %}
+                            <p>برای ثبت نظر <a href="{% url 'login' %}">وارد شوید</a>.</p>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+document.getElementById('comment-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+
+        // اضافه کردن کامنت جدید بدون رفرش
+        const commentList = document.getElementById('comments-list');
+
+        const newComment = document.createElement('div');
+        newComment.classList.add('card', 'mb-3');
+        newComment.innerHTML = `
+            <div class="card-body">
+                <h5 class="card-title">${data.user}</h5>
+                <p class="card-text">${data.content}</p>
+                <p class="text-muted">${data.created_at}</p>
+            </div>
+        `;
+
+        commentList.prepend(newComment);  // اضافه کردن کامنت به بالای لیست
+
+        // پاک کردن فرم
+        form.reset();
+    } else {
+        alert('خطایی رخ داده است. دوباره تلاش کنید.');
+    }
+});
+</script>
 {% endblock %}
