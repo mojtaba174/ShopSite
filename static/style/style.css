@@ -860,7 +860,7 @@ font-size:12px;
 }	
 
 .single-box .single-content-left ul span:before {
-content: "\f2d9";
+content: "";
 font-family:'FontAwesome';
 padding-left:10px;
 }

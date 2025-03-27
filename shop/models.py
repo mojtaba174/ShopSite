@@ -26,9 +26,6 @@ class Color(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=200)
-    price = models.IntegerField()
-    quantity = models.IntegerField()
-    colors = models.ManyToManyField(Color, blank=True)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField(max_length=500)
@@ -55,3 +52,16 @@ class ProductTechnical(models.Model):
 
     class Meta:
         ordering = ['order']
+
+
+class ProductVariant(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE, related_name='variants')
+    color = models.ForeignKey(Color,on_delete=models.CASCADE, related_name='variants')
+    price = models.PositiveIntegerField(default=0)
+    quantity = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = [('product', 'color')]
+
+    def __str__(self):
+        return f"{self.product.title} - {self.color.name}"
