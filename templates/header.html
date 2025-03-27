@@ -49,14 +49,9 @@
                      <li>
                         <a href="#">کالای دیجیتال</a>
                         <ul>
-                           <li><a href="#">گوشی موبایل</a></li>
-                           <li><a href="#">تبلت</a></li>
-                           <li><a href="#">لپ تاپ</a></li>
-                           <li><a href="#">نمایشگر</a></li>
-                           <li><a href="#">دوربین عکاسی</a></li>
-                           <li><a href="#">لوازم جانبی رایانه</a></li>
-                           <li><a href="#">لوازم جانبی موبایل</a></li>
-                           <li><a href="#">سایر</a></li>
+                            {% for category in digit_categories %}
+                           <li><a href="{% url 'shop:filter_category' category.slug%}">{{ category.name }}</a></li>
+                            {% endfor %}
                         </ul>
                      </li>
                      <li><a href="#">آرایشی و بهداشتی</a></li>
