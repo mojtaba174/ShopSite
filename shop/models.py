@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.text import slugify
+from unidecode import unidecode
 
 
 class Brand(models.Model):
@@ -9,8 +11,14 @@ class Brand(models.Model):
         return self.name
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=200, verbose_name='نام برند')
+class DigitCategory(models.Model):
+    name = models.CharField(max_length=200, verbose_name='دسته بندی')
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(unidecode(self.name))
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -27,7 +35,7 @@ class Color(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=200)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(DigitCategory, on_delete=models.CASCADE, related_name='products')
     description = models.TextField(max_length=500)
     slug = models.SlugField(default="", null=False, unique=True)
 

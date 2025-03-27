@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product
+from .models import Product, DigitCategory
 from .classes.cart import Cart
 
 
 def home_page(request):
     products = Product.objects.all()
-    return render(request, 'shop/home_page.html', {'products': products})
+    digit_categories = DigitCategory.objects.all()
+    return render(request, 'shop/home_page.html', {'products': products, 'digit_categories': digit_categories})
 
 
 def detail_page(request, slug):
@@ -48,3 +49,9 @@ def increase_cart_quantity(request, slug, variant_id):
     if next:
         return redirect(next)
     return redirect("shop:cart_page")
+
+
+def filter_category(request, slug):
+    digit_category = get_object_or_404(DigitCategory, slug=slug)
+    products = digit_category.products.all()
+    return render(request, 'shop/filter_category.html', {"products": products})

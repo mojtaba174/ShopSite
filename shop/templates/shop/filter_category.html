@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}{{ products.first.category }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+                    <h4>موبایل و تبلت</h4>
+                    <div class="owl-carousel owl-theme ov2">
+                        {% for product in products %}
+                            <div class="item">
+                                <figure>
+                                    <a href="{% url 'shop:detail_page'  product.slug %}"><img src="{% with product.images.all|dictsortreversed:"is_main"|first as main_image %} {% if main_image %}{{ main_image.image.url }}{% endif %}{% endwith %}"
+                                                    class="w-100" alt="{% static 'img/default.png' %}"/></a>
+                                </figure>
+                                <h5>{{ product.title }}</h5>
+                                <span>{% with product.variants.all|dictsort:'price'|first as min_price_variant %}{{ min_price_variant.price|intcomma }}{% endwith %} تومان</span>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
