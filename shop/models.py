@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from unidecode import unidecode
+from django.contrib.auth.models import User
 
 
 class Brand(models.Model):
@@ -73,3 +74,30 @@ class ProductVariant(models.Model):
 
     def __str__(self):
         return f"{self.product.title} - {self.color.name}"
+
+
+class Comment(models.Model):
+
+    product = models.ForeignKey(
+        'Product',
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user_comments'
+    )
+    content = models.TextField(verbose_name="comment here")
+    rating = models.PositiveSmallIntegerField(
+        verbose_name="rate",
+        choices=[(i, i) for i in range(1, 6)]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.user.username} - {self.product.title} - {self.rating} ⭐️'

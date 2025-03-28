@@ -1,6 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, DigitCategory
 from .classes.cart import Cart
+from django.contrib import messages
+from shop.models import Product
+from .forms import CommentForm
+from django.http import JsonResponse
 
 
 def home_page(request):
@@ -11,7 +15,26 @@ def home_page(request):
 
 def detail_page(request, slug):
     product = get_object_or_404(Product, slug=slug)
-    return render(request, 'shop/detail_page.html', {'product': product})
+
+    comments = product.comments.select_related('user').order_by('-created_at')
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.product = product
+            comment.user = request.user
+            comment.save()
+            messages.success(request, "کامنت شما با موفقیت ثبت شد! 🎉")
+            return redirect('shop:detail_page', slug=slug)
+    else:
+        form = CommentForm()
+
+    return render(request, 'shop/detail_page.html', {
+        'product': product,
+        'comments': comments,
+        'form': form
+    })
 
 
 def cart_page(request):
