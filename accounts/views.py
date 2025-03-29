@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import LoginForm, RegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 def login_page(request):
@@ -61,3 +62,8 @@ def register_page(request):
                 return redirect(next_page)
             return redirect('shop:home_page')
     return render(request, 'accounts/register_page.html', context={'form': form})
+
+
+@login_required
+def dashboard_page(request):
+    return render(request, 'accounts/dashboard/dashboard_page.html')
