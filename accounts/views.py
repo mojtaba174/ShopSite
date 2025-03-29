@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 
 def login_page(request):
     next_page = request.GET.get('next')
-
     if request.user.is_authenticated:
         return redirect('shop:home_page')
 
@@ -20,9 +19,7 @@ def login_page(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-
                 if next_page:
-                    print(next_page)
                     return redirect(next_page)
                 return redirect('shop:home_page')
     return render(request, 'accounts/login_page.html', context={'form': form})

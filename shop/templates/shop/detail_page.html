@@ -271,7 +271,7 @@
                                     <button type="submit" class="btn btn-primary">ارسال نظر</button>
                                 </form>
                                 {% else %}
-                                <p>برای ثبت نظر، لطفاً <a href="{% url 'login' %}">وارد شوید</a>.</p>
+                                <p>برای ثبت نظر، لطفاً <a href="{% url 'accounts:login_page' %}?next={{ request.path }}">وارد شوید</a>.</p>
                                 {% endif %}
                     </div>
                 </div>

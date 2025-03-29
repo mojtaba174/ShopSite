@@ -94,7 +94,7 @@ class Comment(models.Model):
         choices=[(i, i) for i in range(1, 6)]
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    # updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']
