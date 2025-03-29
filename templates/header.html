@@ -30,8 +30,8 @@
                   </div>
                </div>
                <div class="col-md-6">
-                  <form action="" >
-                     <input type="text" placeholder="کالای مورد نظر را جستجو کنید">
+                  <form method="get" action="{% url 'shop:search_results' %}" >
+                     <input type="text" name="value" placeholder="کالای مورد نظر را جستجو کنید">
                      <button type="submit" ><i class="fa fa-search"></i></button>
                   </form>
                </div>

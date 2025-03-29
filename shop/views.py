@@ -78,3 +78,9 @@ def filter_category(request, slug):
     digit_category = get_object_or_404(DigitCategory, slug=slug)
     products = digit_category.products.all()
     return render(request, 'shop/filter_category.html', {"products": products})
+
+
+def search_results(request):
+    value = request.GET.get('value')
+    products = Product.objects.filter(title__contains=value)
+    return render(request, 'shop/filter_category.html', {'products': products})

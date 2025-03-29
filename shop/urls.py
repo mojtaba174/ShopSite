@@ -12,4 +12,5 @@ urlpatterns = [
     path('shop/decrease_cart_quantity/<slug:slug>/<int:variant_id>', views.decrease_cart_quantity,
          name='decrease_cart_quantity'),
     path('shop/filter_category/<slug:slug>', views.filter_category, name='filter_category'),
+    path('shop/search_results', views.search_results, name='search_results')
 ]
