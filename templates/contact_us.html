@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}تماس با ما{% endblock %}
+
+{% block content %}
+    <section id="contact" class="d-flex justify-content-center">
+            <div class="col-md-6">
+                <h2 class="text-center">تماس با ما</h2>
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">نام</label>
+                        <input type="text" class="form-control" id="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">ایمیل</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">پیام</label>
+                        <textarea class="form-control" id="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">ارسال</button>
+                </form>
+            </div>
+        </section>
+{% endblock %}

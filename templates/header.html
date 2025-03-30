@@ -48,6 +48,7 @@
             <div class="row">
                <div class="col-md-12">
                   <ul>
+                  <li><a href="{% url 'shop:home_page' %}">خانه</a></li>
                      <li>
                         <a href="#">کالای دیجیتال</a>
                         <ul>
@@ -56,25 +57,10 @@
                             {% endfor %}
                         </ul>
                      </li>
-                     <li><a href="#">آرایشی و بهداشتی</a></li>
-                     <li>
-                        <a href="#">مد و پوشاک</a>
-                        <ul>
-                           <li><a href="#">لباس فصل</a></li>
-                           <li><a href="#">ساعت  مچی</a></li>
-                           <li><a href="#">بدلیجات</a></li>
-                        </ul>
-                     </li>
-                     <li><a href="#">خانه و آشپزخانه</a></li>
-                     <li><a href="#">ابزار اداری</a></li>
-                     <li><a href="#">اسباب بازی</a></li>
-                     <li>
-                        <a href="#">اخبار</a>
-                        <ul>
-                           <li><a href="#">تکنولوژی</a></li>
-                           <li><a href="#">علم و دانش</a></li>
-                        </ul>
-                     </li>
+
+                     <li><a href='{% url "shop:about_us" %}'>درباره ما</a></li>
+                        <li><a href="{% url 'shop:contact_us' %}">تماس با</a></li>
+
                   </ul>
                </div>
             </div>

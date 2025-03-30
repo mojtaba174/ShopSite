@@ -84,3 +84,11 @@ def search_results(request):
     value = request.GET.get('value')
     products = Product.objects.filter(title__contains=value)
     return render(request, 'shop/filter_category.html', {'products': products})
+
+
+def about_us(request):
+    return render(request, 'about_us.html')
+
+
+def contact_us(request):
+    return render(request, 'contact_us.html')
