@@ -1,7 +1,184 @@
-{% extends 'accounts/dashboard/base/base.html' %}
+{#{% extends 'accounts/dashboard/base/base.html' %}#}
 
-{% block title %}داشبورد{% endblock %}
 
 {% block content %}
+
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل کاربر | فروشگاه</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: sans-serif;
+            background: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: row-reverse;
+        }
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #fff;
+            padding: 20px;
+            height: 100vh;
+            transition: all 0.3s ease;
+            box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .sidebar:hover {
+            transform: translateX(-10px);
+        }
+        .sidebar a {
+            color: #ddd;
+            text-decoration: none;
+            display: block;
+            padding: 10px 0;
+            transition: 0.3s;
+            text-align: right;
+        }
+        .sidebar a:hover {
+            background: #1abc9c;
+            color: #fff;
+            padding-right: 20px;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        header {
+            background: #3498db;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        header:hover {
+            background: #2980b9;
+        }
+        .card {
+            background: #fff;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+        }
+        .stat-item {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+            transition: box-shadow 0.3s;
+        }
+        .stat-item:hover {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        table th {
+            background: #3498db;
+            color: #fff;
+        }
+        table tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+        @media (max-width: 768px) {
+            .stats {
+                flex-direction: column;
+            }
+            .stat-item {
+                margin: 10px 0;
+            }
+            .sidebar {
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>پنل کاربر</h2>
+        <a href="#dashboard">داشبورد</a>
+        <a href="#orders">سفارش‌ها</a>
+        <a href="#profile">پروفایل</a>
+        <a href="#wishlist">علاقه‌مندی‌ها</a>
+        <a href="#messages">پیام‌ها</a>
+    </div>
+    <div class="main-content">
+        <header>
+            <h1>خوش آمدید!</h1>
+        </header>
+        <section id="dashboard" class="card">
+            <h2>داشبورد</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <h3>5</h3>
+                    <p>سفارش‌های اخیر</p>
+                </div>
+                <div class="stat-item">
+                    <h3>1,200,000 تومان</h3>
+                    <p>مبلغ کل خرید</p>
+                </div>
+                <div class="stat-item">
+                    <h3>12</h3>
+                    <p>محصول خریداری‌شده</p>
+                </div>
+            </div>
+        </section>
+        <section id="orders" class="card">
+            <h2>سفارش‌ها</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>شماره سفارش</th>
+                        <th>تاریخ</th>
+                        <th>وضعیت</th>
+                        <th>مبلغ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#12345</td>
+                        <td>1404/01/10</td>
+                        <td>در حال پردازش</td>
+                        <td>320,000 تومان</td>
+                    </tr>
+                    <tr>
+                        <td>#12346</td>
+                        <td>1404/01/15</td>
+                        <td>تحویل داده شده</td>
+                        <td>580,000 تومان</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>
 
 {% endblock %}

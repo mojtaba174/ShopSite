@@ -3,7 +3,7 @@ from .models import Comment
 
 
 class CommentForm(forms.ModelForm):
-    """فرم کامنت برای ثبت نظر و امتیاز"""
+
 
     class Meta:
         model = Comment

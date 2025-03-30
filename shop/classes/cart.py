@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from ..models import Product, ProductVariant
 
+
 class Cart:
     def __init__(self, request):
         self.session = request.session
