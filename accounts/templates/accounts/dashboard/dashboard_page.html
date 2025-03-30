@@ -43,6 +43,7 @@
             padding: 10px 0;
             transition: 0.3s;
             text-align: right;
+            cursor: pointer;
         }
         .sidebar a:hover {
             background: #1abc9c;
@@ -71,51 +72,47 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             transition: transform 0.3s;
+            overflow: hidden;
         }
         .card:hover {
             transform: translateY(-10px);
         }
-        .stats {
+        .profile-card {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            animation: fadeIn 1s ease;
         }
-        .stat-item {
-            background: #ecf0f1;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
+        .profile-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        .profile-card img:hover {
+            transform: scale(1.1);
+        }
+        .profile-details {
             flex: 1;
-            margin: 0 10px;
-            transition: box-shadow 0.3s;
         }
-        .stat-item:hover {
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        .profile-details h3, .profile-details p {
+            margin: 5px 0;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .profile-details p {
+            color: #555;
         }
-        table th, table td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        table th {
-            background: #3498db;
-            color: #fff;
-        }
-        table tr:nth-child(even) {
-            background: #f2f2f2;
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
         @media (max-width: 768px) {
-            .stats {
-                flex-direction: column;
-            }
-            .stat-item {
-                margin: 10px 0;
-            }
             .sidebar {
                 width: 100px;
+            }
+            .profile-card {
+                flex-direction: column;
+                text-align: center;
             }
         }
     </style>
@@ -123,61 +120,49 @@
 <body>
     <div class="sidebar">
         <h2>پنل کاربر</h2>
-        <a href="#dashboard">داشبورد</a>
-        <a href="#orders">سفارش‌ها</a>
-        <a href="#profile">پروفایل</a>
-        <a href="#wishlist">علاقه‌مندی‌ها</a>
-        <a href="#messages">پیام‌ها</a>
+        <a onclick="showSection('profile')">پروفایل</a>
+        <a onclick="showSection('orders')">سفارش‌ها</a>
+        <a onclick="showSection('settings')">تنظیمات</a>
+        <a onclick="showSection('logout')">خروج</a>
     </div>
     <div class="main-content">
         <header>
             <h1>خوش آمدید!</h1>
         </header>
-        <section id="dashboard" class="card">
-            <h2>داشبورد</h2>
-            <div class="stats">
-                <div class="stat-item">
-                    <h3>5</h3>
-                    <p>سفارش‌های اخیر</p>
-                </div>
-                <div class="stat-item">
-                    <h3>1,200,000 تومان</h3>
-                    <p>مبلغ کل خرید</p>
-                </div>
-                <div class="stat-item">
-                    <h3>12</h3>
-                    <p>محصول خریداری‌شده</p>
+        <div id="profile" class="card" style="display:none;">
+            <div class="profile-card">
+                <img src="https://via.placeholder.com/100" alt="Profile Picture">
+                <div class="profile-details">
+                    <h3>نام کاربری: ali2025</h3>
+                    <p>نام: علی</p>
+                    <p>نام خانوادگی: رضایی</p>
+                    <p>ایمیل: ali2025@example.com</p>
                 </div>
             </div>
-        </section>
-        <section id="orders" class="card">
+        </div>
+        <div id="orders" class="card" style="display:none;">
             <h2>سفارش‌ها</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>شماره سفارش</th>
-                        <th>تاریخ</th>
-                        <th>وضعیت</th>
-                        <th>مبلغ</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>#12345</td>
-                        <td>1404/01/10</td>
-                        <td>در حال پردازش</td>
-                        <td>320,000 تومان</td>
-                    </tr>
-                    <tr>
-                        <td>#12346</td>
-                        <td>1404/01/15</td>
-                        <td>تحویل داده شده</td>
-                        <td>580,000 تومان</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+            <p>لیست سفارش‌های شما...</p>
+        </div>
+        <div id="settings" class="card" style="display:none;">
+            <h2>تنظیمات</h2>
+            <p>تنظیمات حساب کاربری...</p>
+        </div>
+        <div id="logout" class="card" style="display:none;">
+            <h2>خروج</h2>
+            <p>آیا مطمئن هستید که می‌خواهید خارج شوید؟</p>
+        </div>
     </div>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.card');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+    </script>
 </body>
 </html>
 
