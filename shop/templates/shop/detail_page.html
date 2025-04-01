@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
                                 <hr>
-                                <h3 ><span id='product-price'>{{ product.variants.first.price|intcomma }}</span> تومان</h3>
+                                <h3 ><span id='product-price'>{% with product.variants.all|dictsort:'price'|first as first %}{{ first.price|intcomma }}{% endwith %}</span> تومان</h3>
                                 <div class="btn-single">
                                     <button type="submit"><i
                                             class="fa fa-cart-plus"></i>
@@ -278,44 +278,6 @@
             </div>
         </div>
     </div>
-{#<script>#}
-{#document.getElementById('comment-form').addEventListener('submit', async function(e) {#}
-{#    e.preventDefault();#}
-{##}
-{#    const form = e.target;#}
-{#    const formData = new FormData(form);#}
-{##}
-{#    const response = await fetch(form.action, {#}
-{#        method: 'POST',#}
-{#        body: formData,#}
-{#        headers: {#}
-{#            'X-Requested-With': 'XMLHttpRequest'#}
-{#        }#}
-{#    });#}
-{##}
-{#    if (response.ok) {#}
-{#        const data = await response.json();#}
-{##}
-{#        // اضافه کردن کامنت جدید بدون رفرش#}
-{#        const commentList = document.getElementById('comments-list');#}
-{##}
-{#        const newComment = document.createElement('div');#}
-{#        newComment.classList.add('card', 'mb-3');#}
-{#        newComment.innerHTML = `#}
-{#            <div class="card-body">#}
-{#                <h5 class="card-title">${data.user}</h5>#}
-{#                <p class="card-text">${data.content}</p>#}
-{#                <p class="text-muted">${data.created_at}</p>#}
-{#            </div>#}
-{#        `;#}
-{##}
-{#        commentList.prepend(newComment);  // اضافه کردن کامنت به بالای لیست#}
-{##}
-{#        // پاک کردن فرم#}
-{#        form.reset();#}
-{#    } else {#}
-{#        alert('خطایی رخ داده است. دوباره تلاش کنید.');#}
-{#    }#}
-{#});#}
-{#</script>#}
+    </div>
+
 {% endblock %}

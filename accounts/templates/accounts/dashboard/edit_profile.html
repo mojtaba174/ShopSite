@@ -1,0 +1,53 @@
+{% extends 'accounts/dashboard/base/base.html' %}
+{% load static %}
+{% block title %}ویرایش پروفایل{% endblock %}
+
+{% block banner_title %}اطلاعات پروفایل{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+      <div class="col-12 col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="username_field">نام کاربری</label>
+                  {{ form.username }}
+                  {{ form.username.errors }}
+              </div>
+
+                <div class="form-outline mb-4">
+                <label class="form-label" for="email_field">آدرس ایمیل</label>
+                  {{ form.email }}
+                    {{ form.email.errors }}
+              </div>
+              <div class="form-outline mb-4">
+                <label class="form-label" for="firstname_field">نام</label>
+                  {{ form.first_name }}
+              </div>
+                <div class="form-outline mb-4">
+                <label class="form-label" for="lastname_field">نام خانوادگی</label>
+                  {{ form.last_name }}
+              </div>
+
+              <div class="row mb-4">
+                <div class="col d-flex justify-content-start">
+                </div>
+
+              </div>
+
+
+              <button type="submit" class="btn btn-primary w-100 mb-4">ویرایش اطلاعات</button>
+
+
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

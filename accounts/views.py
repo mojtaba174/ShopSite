@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, EditProfile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -67,3 +67,21 @@ def register_page(request):
 @login_required
 def dashboard_page(request):
     return render(request, 'accounts/dashboard/dashboard_page.html')
+
+
+@login_required
+def edit_profile_page(request):
+    if request.method == "GET":
+        username = request.user.username
+        first_name = request.user.first_name
+        last_name = request.user.last_name
+        email = request.user.email
+        form = EditProfile(
+            initial={'username': username, 'first_name': first_name, 'last_name': last_name, 'email': email})
+    else:
+        form = EditProfile(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('accounts:edit_profile_page')
+
+    return render(request, 'accounts/dashboard/edit_profile.html', context={'form': form})

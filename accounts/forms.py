@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 
 class LoginForm(forms.Form):
@@ -54,6 +55,38 @@ class RegisterForm(forms.Form):
             self.add_error('username', 'نام کاربری وارد شده وجود دارد. لطفا یک نام کاربری دیگر وارد کنید')
 
         if User.objects.filter(email=email):
+            self.add_error('email', 'ایمیل وارد شده وجود دارد. لطفا یک ایمیل دیگر وارد کنید')
+
+        return cleaned_data
+
+
+UserModel = get_user_model()
+
+
+class EditProfile(forms.ModelForm):
+    class Meta:
+        model = UserModel
+        fields = ['username', 'email', 'first_name', 'last_name']
+        widgets = {
+            'username': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': 'نام کاربری', 'id': 'username_field'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'ایمیل', 'id': 'email_field'}),
+            'first_name': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': 'نام', 'id': 'firstname_field'}),
+            'last_name': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': 'نام خانوادگی', 'id': 'lastname_field'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
+        user_id = self.instance.id
+
+        if User.objects.exclude(id=user_id).filter(username=username).exists():
+            self.add_error('username', 'نام کاربری وارد شده وجود دارد. لطفا یک نام کاربری دیگر وارد کنید')
+
+        if User.objects.exclude(id=user_id).filter(email=email).exists():
             self.add_error('email', 'ایمیل وارد شده وجود دارد. لطفا یک ایمیل دیگر وارد کنید')
 
         return cleaned_data
