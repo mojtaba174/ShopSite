@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from ..models import Product, ProductVariant
+from shop.models import Product, ProductVariant
 
 
 class Cart:

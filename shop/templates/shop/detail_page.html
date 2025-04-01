@@ -49,7 +49,7 @@
             background-color: #f1f1f1;
         }
     </style>
-    <form method="post" action="{% url 'shop:add_to_cart' product.slug%}?next={{ request.path }}">
+    <form method="post" action="{% url 'shop:cart:add_to_cart' product.slug%}?next={{ request.path }}">
         {% csrf_token %}
         <div class="container">
             <div class="row">

@@ -34,9 +34,9 @@
         <div class="d-flex justify-content-center">
             <div class="btn-group" role="group" aria-label="Calculator Operators">
 
-                <a href="{% url 'shop:decrease_cart_quantity' item.product.slug item.variant.id%}"><button  type="submit" class="btn btn-outline-danger btn-custom">-</button></a>
+                <a href="{% url 'shop:cart:decrease_cart_quantity' item.product.slug item.variant.id%}"><button  type="submit" class="btn btn-outline-danger btn-custom">-</button></a>
                 <button type="button" class="btn btn-outline-secondary btn-custom">{{ item.quantity }}</button>
-                <a href="{% url 'shop:increase_cart_quantity' item.product.slug item.variant.id%}"><button  type="submit" class="btn btn-outline-success btn-custom">+</button></a>
+                <a href="{% url 'shop:cart:increase_cart_quantity' item.product.slug item.variant.id%}"><button  type="submit" class="btn btn-outline-success btn-custom">+</button></a>
             </div>
         </div>
     </div>
