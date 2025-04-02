@@ -21,51 +21,46 @@ def cart_page(request):
 
 
 def add_to_cart(request, slug):
-    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        next_url = request.POST.get('next')
-        variant_id = request.POST.get('variant_id')
-
-        try:
-            variant = ProductVariant.objects.get(id=variant_id)
-        except ProductVariant.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'محصول یافت نشد'}, status=404)
-
-        response_data = {}
+    if request.method == "POST":
+        variant_id = request.POST.get("variant_id")
+        variant = get_object_or_404(ProductVariant, id=variant_id)
 
         if request.user.is_authenticated:
             cart_item, created = CartItem.objects.get_or_create(
-                user=request.user,
-                product=variant.product,
-                variant=variant,
-                defaults={
-                    'quantity': 1,
-                    'total_price': variant.price
-                }
+                user=request.user, variant=variant,
+                defaults={"quantity": 0, "total_price": 0}
             )
 
-            if not created:
-                if variant.quantity > cart_item.quantity:
-                    cart_item.quantity += 1
+            if cart_item.quantity < variant.quantity:  # بررسی موجودی
+                cart_item.quantity += 1
                 cart_item.total_price = cart_item.quantity * variant.price
                 cart_item.save()
-                response_data['action'] = 'increase'
-                response_data['quantity'] = cart_item.quantity
-                response_data['total_price'] = cart_item.total_price
+                return JsonResponse({
+                    "success": True,
+                    "quantity": cart_item.quantity,
+                    "total_price": cart_item.total_price,
+                    "cart_count": CartItem.objects.filter(user=request.user).count()
+                })
             else:
-                response_data['action'] = 'add'
+                return JsonResponse({"success": False, "message": "موجودی کافی نیست"}, status=400)
+
         else:
             cart = Cart(request)
-            cart.add(variant.product, variant_id)
-            response_data['action'] = 'add'
+            current_quantity = cart.cart[f"{variant.product.id}-{variant_id}"]['quantity']
 
-        response_data['success'] = True
-        response_data['message'] = 'محصول به سبد خرید اضافه شد'
-        response_data['next_url'] = next_url if next_url else None
-        response_data['cart_count'] = get_cart_count(request)
+            if current_quantity < variant.quantity:
+                cart.add(variant.product, variant.id, 1)
+                new_quantity = cart.cart[f"{variant.product.id}-{variant_id}"]['quantity']
+                return JsonResponse({
+                    "success": True,
+                    "quantity": new_quantity,
+                    "total_price": new_quantity * variant.price,
+                    "cart_count": len(cart.cart.keys())
+                })
+            else:
+                return JsonResponse({"success": False, "message": "موجودی کافی نیست"}, status=400)
 
-        return JsonResponse(response_data)
-
-    return JsonResponse({'success': False, 'message': 'درخواست نامعتبر'}, status=400)
+    return JsonResponse({"success": False, "message": "Invalid request"}, status=400)
 
 
 def get_cart_count(request):

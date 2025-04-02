@@ -18,10 +18,10 @@
           <div class="card-body p-4">
             <div class="row d-flex justify-content-between align-items-center">
               <div class="col-md-2 col-lg-2 col-xl-2">
-                <img src="{{ item.product.images.first.image.url }}" class="img-fluid rounded-3" alt="{{ item.product.title }}">
+                <img src="{{ item.variant.product.images.first.image.url }}" class="img-fluid rounded-3" alt="{{ item.variant.product.title }}">
               </div>
               <div class="col-md-3 col-lg-3 col-xl-3">
-                <p class="lead fw-normal mb-2">{{ item.product.title }}</p>
+                <p class="lead fw-normal mb-2">{{ item.variant.product.title }}</p>
                 <p><span class="text-muted">رنگ: </span>{{ item.variant.color.name }}</p>
               </div>
               <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
@@ -55,6 +55,37 @@
 </section>
 
 <script>
+document.getElementById("checkout-btn").addEventListener("click", function () {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];  // سبد خرید از localStorage
+
+        if (cart.cart.length === 0) {
+            alert("سبد خرید شما خالی است!");
+            return;
+        }
+
+        let orderData = {
+            items: cart.map(item => ({
+                variant_id: item.variant.id,  // آی‌دی واریانت
+                quantity: item.quantity       // تعداد محصول
+            }))
+        };
+
+        fetch("/confirm/", {  // آدرس API بک‌اند
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")  // ارسال CSRF برای امنیت در جنگو
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);  // پیام موفقیت یا خطا را نشان می‌دهد
+            localStorage.removeItem("cart");  // بعد از پرداخت، سبد خرید را پاک کن
+            window.location.href = "/order-confirmation/";  // انتقال به صفحه تأیید سفارش
+        })
+        .catch(error => console.error("خطا در ارسال سفارش:", error));
+    });
     document.querySelectorAll(".increase-quantity").forEach(button => {
         button.addEventListener("click", function () {
             let cartItem = this.closest(".cart-item");
