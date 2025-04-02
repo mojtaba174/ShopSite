@@ -64,8 +64,8 @@ class ProductTechnical(models.Model):
 
 
 class ProductVariant(models.Model):
-    product = models.ForeignKey(Product,on_delete=models.CASCADE, related_name='variants')
-    color = models.ForeignKey(Color,on_delete=models.CASCADE, related_name='variants')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variants')
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, related_name='variants')
     price = models.PositiveIntegerField(default=0)
     quantity = models.PositiveIntegerField(default=0)
 
@@ -77,7 +77,6 @@ class ProductVariant(models.Model):
 
 
 class Comment(models.Model):
-
     product = models.ForeignKey(
         'Product',
         on_delete=models.CASCADE,
@@ -94,10 +93,38 @@ class Comment(models.Model):
         choices=[(i, i) for i in range(1, 6)]
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    # updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']
 
     def __str__(self):
         return f'{self.user.username} - {self.product.title} - {self.rating} ⭐️'
+
+
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ('ثبت شد', 'ثبت شد'),
+        ('در حال آماده سازی سفارش', 'در حال آماده سازی سفارش'),
+        ('در حال ارسال', 'در حال ارسال'),
+        ('تحویل داده شد', 'تحویل داده شد'),
+        ('کنسل شد', 'کنسل شد'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
+    date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='ثبت شد')
+    total_price = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"Order {self.id} - {self.user.username}"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orderItems')
+    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='productVariant')
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.quantity} x {self.variant.product.title} in Order {self.order.id}"

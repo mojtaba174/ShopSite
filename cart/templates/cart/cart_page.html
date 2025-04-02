@@ -10,62 +10,42 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h3 class="fw-normal mb-0">سبد خرید</h3>
-          <div>
-            <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!" class="text-body">price <i
-                  class="fas fa-angle-down mt-1"></i></a></p>
-          </div>
         </div>
 
+        <div id="cart-items">
         {% for item in cart %}
-        <div class="card rounded-3 mb-4">
+        <div class="card rounded-3 mb-4 cart-item" data-variant-id="{{ item.variant.id }}" data-quantity="{{ item.quantity }}">
           <div class="card-body p-4">
             <div class="row d-flex justify-content-between align-items-center">
               <div class="col-md-2 col-lg-2 col-xl-2">
-                <img
-                  src="{% with item.product.images.all|dictsortreversed:'is_main'|first as image %}{{ image.image.url }}{% endwith %}"
-                  class="img-fluid rounded-3" alt="Cotton T-shirt">
+                <img src="{{ item.product.images.first.image.url }}" class="img-fluid rounded-3" alt="{{ item.product.title }}">
               </div>
               <div class="col-md-3 col-lg-3 col-xl-3">
                 <p class="lead fw-normal mb-2">{{ item.product.title }}</p>
                 <p><span class="text-muted">رنگ: </span>{{ item.variant.color.name }}</p>
               </div>
-
-            <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-        <div class="d-flex justify-content-center">
-            <div class="btn-group" role="group" aria-label="Calculator Operators">
-
-                <a href="{% url 'shop:cart:decrease_cart_quantity' item.product.slug item.variant.id%}"><button  type="submit" class="btn btn-outline-danger btn-custom">-</button></a>
-                <button type="button" class="btn btn-outline-secondary btn-custom">{{ item.quantity }}</button>
-                <a href="{% url 'shop:cart:increase_cart_quantity' item.product.slug item.variant.id%}"><button  type="submit" class="btn btn-outline-success btn-custom">+</button></a>
-            </div>
-        </div>
-    </div>
+              <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                <button class="btn btn-outline-danger btn-custom decrease-quantity">-</button>
+                <span class="mx-2 quantity">{{ item.quantity }}</span>
+                <button class="btn btn-outline-success btn-custom increase-quantity">+</button>
+              </div>
               <div class="col-md-2 px-0 col-lg-2 col-xl-2 offset-lg-1">
-                <h5 class="mb-0">{{ item.total_price|intcomma }} تومان</h5>
+                <h5 class="mb-0 total-price">{{ item.total_price|intcomma }} تومان</h5>
               </div>
               <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                <a href="#!" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
+                <button class="btn btn-danger remove-item">حذف</button>
               </div>
             </div>
           </div>
         </div>
-            {% empty %}
-            <p>هیچ محصولی در سبد خرید شما وجود ندارد!</p>
+        {% empty %}
+        <p>هیچ محصولی در سبد خرید شما وجود ندارد!</p>
         {% endfor %}
-
-        <div class="card mb-4">
-          <div class="card-body p-4 d-flex flex-row">
-            <div data-mdb-input-init class="form-outline flex-fill">
-              <input type="text" id="form1" class="form-control form-control-lg" />
-              <label class="form-label" for="form1">Discound code</label>
-            </div>
-            <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-warning btn-lg ms-3">Apply</button>
-          </div>
         </div>
 
         <div class="card">
           <div class="card-body">
-            <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-block btn-lg">Proceed to Pay</button>
+            <button id="checkout-btn" class="btn btn-warning btn-block btn-lg">پرداخت</button>
           </div>
         </div>
 
@@ -73,4 +53,63 @@
     </div>
   </div>
 </section>
+
+<script>
+    document.querySelectorAll(".increase-quantity").forEach(button => {
+        button.addEventListener("click", function () {
+            let cartItem = this.closest(".cart-item");
+            let variantId = cartItem.getAttribute("data-variant-id");
+
+            fetch(`increase_cart_quantity/${variantId}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                }
+            }).then(response => response.json())
+              .then(data => {
+                  cartItem.querySelector(".quantity").innerText = data.quantity;
+                  cartItem.querySelector(".total-price").innerText = data.total_price + " تومان";
+              });
+        });
+    });
+
+    document.querySelectorAll(".decrease-quantity").forEach(button => {
+        button.addEventListener("click", function () {
+            let cartItem = this.closest(".cart-item");
+            let variantId = cartItem.getAttribute("data-variant-id");
+
+            fetch(`decrease_cart_quantity/${variantId}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                }
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.quantity > 0) {
+                      cartItem.querySelector(".quantity").innerText = data.quantity;
+                      cartItem.querySelector(".total-price").innerText = data.total_price + " تومان";
+                  } else {
+                      cartItem.remove();
+                  }
+              });
+        });
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
 {% endblock %}

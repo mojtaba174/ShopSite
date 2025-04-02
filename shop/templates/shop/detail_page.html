@@ -49,7 +49,7 @@
             background-color: #f1f1f1;
         }
     </style>
-    <form method="post" action="{% url 'shop:cart:add_to_cart' product.slug%}?next={{ request.path }}">
+    <form id="add-to-cart-form" method="post" action="{% url 'shop:cart:add_to_cart' product.slug %}?next={{ request.path }}">
         {% csrf_token %}
         <div class="container">
             <div class="row">
@@ -103,10 +103,11 @@
                                 <hr>
                                 <h3 ><span id='product-price'>{% with product.variants.all|dictsort:'price'|first as first %}{{ first.price|intcomma }}{% endwith %}</span> تومان</h3>
                                 <div class="btn-single">
-                                    <button type="submit"><i
+                                    <button onclick="addToCart(event, '{{ product.slug }}')" class="add-to-cart-btn"><i
                                             class="fa fa-cart-plus"></i>
                                         افزودن به سبد خرید
                                     </button>
+
                                 </div>
 
                             </div>
@@ -148,6 +149,39 @@
         var selectedPrice = element.getAttribute('data-price');
         document.getElementById('product-price').innerText = numberWithCommas(selectedPrice);
     }
+function addToCart(event, slug) {
+    event.preventDefault();
+
+    const variantId = document.querySelector('input[name="variant_id"]:checked').value;
+    const nextUrl = "{{ request.path }}";
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    fetch(`/shop/cart/add_to_cart/${slug}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrfToken
+        },
+        body: `variant_id=${variantId}&next=${nextUrl}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = data.cart_count;
+            });
+            showToast('محصول به سبد خرید اضافه شد');
+        } else {
+            showToast(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('خطا در ارتباط با سرور', 'error');
+    });
+}
+
 </script>
     <!---------------------------------->
     <div class="container">
