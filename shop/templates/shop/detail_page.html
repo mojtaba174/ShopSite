@@ -169,7 +169,6 @@ function addToCart(event, slug) {
     event.preventDefault();
 
     const variantId = document.querySelector('input[name="variant_id"]:checked').value;
-    const nextUrl = "{{ request.path }}";
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     fetch(`/shop/cart/add_to_cart/${slug}/`, {
@@ -179,13 +178,13 @@ function addToCart(event, slug) {
             'X-Requested-With': 'XMLHttpRequest',
             'X-CSRFToken': csrfToken
         },
-        body: `variant_id=${variantId}&next=${nextUrl}`
+        body: `variant_id=${variantId}`
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             document.querySelectorAll('.cart-count').forEach(el => {
-                el.textContent = data.cart_count;
+                el.textContent = data.cart_count;  // حالا مقدار cart_count مقداردهی شده
             });
             showToast('محصول به سبد خرید اضافه شد');
         } else {
@@ -198,6 +197,17 @@ function addToCart(event, slug) {
     });
 }
 
+function showToast(message, type = 'success') {
+    let toast = document.createElement("div");
+    toast.className = `toast-message ${type}`;
+    toast.innerText = message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
 </script>
     <!---------------------------------->
     <div class="container">
