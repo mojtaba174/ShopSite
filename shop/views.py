@@ -2,7 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import DigitCategory
 from django.contrib import messages
 from shop.models import Product
-from .forms import CommentForm
+# from .forms import CommentForm
+from comments.forms import CommentForm
+from comments.models import Comment
 
 
 def home_page(request):
@@ -14,19 +16,21 @@ def home_page(request):
 def detail_page(request, slug):
     product = get_object_or_404(Product, slug=slug)
 
-    comments = product.comments.select_related('user').order_by('-created_at')
-
-    if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.product = product
-            comment.user = request.user
-            comment.save()
-            messages.success(request, "کامنت شما با موفقیت ثبت شد! 🎉")
-            return redirect('shop:detail_page', slug=slug)
-    else:
-        form = CommentForm()
+    # comments = product.comments.select_related('user').order_by('-created_at')
+    #
+    # if request.method == "POST":
+    #     form = CommentForm(request.POST)
+    #     if form.is_valid():
+    #         comment = form.save(commit=False)
+    #         comment.product = product
+    #         comment.user = request.user
+    #         comment.save()
+    #         messages.success(request, "کامنت شما با موفقیت ثبت شد! 🎉")
+    #         return redirect('shop:detail_page', slug=slug)
+    # else:
+    #     form = CommentForm()
+    comments = product.comments.select_related('user')
+    form = CommentForm()
 
     return render(request, 'shop/detail_page.html', {
         'product': product,

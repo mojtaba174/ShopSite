@@ -313,7 +313,7 @@ function showToast(message, type = 'success') {
                                 <div class="card mb-3">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ comment.user.username }} ({{ comment.rating }} ⭐️)</h5>
-                                        <p class="card-text">{{ comment.content }}</p>
+                                        <p class="card-text">{{ comment.text }}</p>
                                         <p class="text-muted">ایجاد شده در: {{ comment.created_at|date:"Y-m-d H:i" }}</p>
                                     </div>
                                 </div>
@@ -325,7 +325,7 @@ function showToast(message, type = 'success') {
 
                                 <h3>ثبت نظر</h3>
                                 {% if user.is_authenticated %}
-                                <form method="POST" class="mt-3">
+                                <form method="POST" action="{% url 'comment:add_comment' product.slug %}" class="mt-3">
                                     {% csrf_token %}
                                     {{ form.as_p }}
                                     <button type="submit" class="btn btn-primary">ارسال نظر</button>

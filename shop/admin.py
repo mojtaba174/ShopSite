@@ -1,5 +1,6 @@
 from django.contrib import admin
 from . import models
+from comments.models import Comment
 
 
 class ProductImageInline(admin.TabularInline):
@@ -18,27 +19,28 @@ class ProductVariant(admin.TabularInline):
 
 
 class CommentInline(admin.TabularInline):
-    model = models.Comment
+    model = Comment
     extra = 1
 
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
+    # inlines = [ProductImageInline, ProductTechnical, ProductVariant, ]
     inlines = [ProductImageInline, ProductTechnical, ProductVariant, CommentInline]
     prepopulated_fields = {"slug": ("title",)}
 
 
 class UserCommentInline(admin.TabularInline):
-    model = models.Comment
+    model = Comment
     extra = 1
 
 
-@admin.register(models.Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'product', 'rating', 'created_at')
-    list_filter = ('product', 'user', 'rating', 'created_at')
-    search_fields = ('user__username', 'product__title', 'content')
-    ordering = ('-created_at',)
+# @admin.register(Comment)
+# class CommentAdmin(admin.ModelAdmin):
+#     list_display = ('user', 'product', 'rating', 'created_at')
+#     list_filter = ('product', 'user', 'rating', 'created_at')
+#     search_fields = ('user__username', 'product__title', 'content')
+#     ordering = ('-created_at',)
 
 
 admin.site.register(models.DigitCategory)
