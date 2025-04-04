@@ -1,8 +1,8 @@
 from django.urls import path
-from . import views
+from .views import add_comment
 
 
-app_name = 'comment'
+app_name = 'comments'
 urlpatterns = [
-    path('add/<slug:product_slug>/', views.add_comment, name='add_comment'),
+    path('ajax/add/<slug:product_slug>/', add_comment, name='add_comment'),
 ]

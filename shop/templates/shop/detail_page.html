@@ -209,6 +209,9 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 </script>
+{#    comment script#}
+
+
     <!---------------------------------->
     <div class="container">
         <span class="releated-products">محصولات مرتبط</span>
@@ -308,36 +311,76 @@ function showToast(message, type = 'success') {
                                 <p class="bg-light"><span>{{ technical.title }}</span>{{ technical.value }}</p>
                             {% endfor %}
                         </div>
-                        <div id="two" class="tab-pane fade">
-                            {% for comment in comments %}
-                                <div class="card mb-3">
-                                    <div class="card-body">
+                       <div id="two" class="tab-pane fade">
+                            <div class="card mb-3">
+                                <div class="card-body" id="comment-list">
+                                    {% for comment in comments %}
                                         <h5 class="card-title">{{ comment.user.username }} ({{ comment.rating }} ⭐️)</h5>
                                         <p class="card-text">{{ comment.text }}</p>
                                         <p class="text-muted">ایجاد شده در: {{ comment.created_at|date:"Y-m-d H:i" }}</p>
-                                    </div>
+                                    {% empty %}
+                                        <p>هیچ نظری ثبت نشده است.</p>
+                                    {% endfor %}
                                 </div>
-                                {% empty %}
-                                <p>هیچ نظری ثبت نشده است.</p>
-                                {% endfor %}
+                            </div>
 
-                                <hr>
+                            <hr>
 
-                                <h3>ثبت نظر</h3>
-                                {% if user.is_authenticated %}
-                                <form method="POST" action="{% url 'comment:add_comment' product.slug %}" class="mt-3">
+                            <h3>ثبت نظر</h3>
+                            {% if user.is_authenticated %}
+                                <form id="comment-form"  method="POST" class="mt-3">
                                     {% csrf_token %}
                                     {{ form.as_p }}
                                     <button type="submit" class="btn btn-primary">ارسال نظر</button>
                                 </form>
-                                {% else %}
+                            {% else %}
                                 <p>برای ثبت نظر، لطفاً <a href="{% url 'accounts:login_page' %}?next={{ request.path }}">وارد شوید</a>.</p>
-                                {% endif %}
-                    </div>
+                            {% endif %}
+                       </div>
+
                 </div>
             </div>
         </div>
     </div>
     </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('comment-form');
+    if (form) {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const data = new FormData(form);
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const productSlug = "{{ product.slug }}";
+
+            const response = await fetch(`/comments/ajax/add/${productSlug}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                body: data
+            });
+
+            const result = await response.json();
+
+            if (result.status === 'ok') {
+                const commentList = document.getElementById('comment-list');
+                const newComment = document.createElement('div');
+                newComment.classList.add('card-body');
+                newComment.innerHTML = `
+                    <h5 class="card-title">${result.username} (${result.rating} ⭐️)</h5>
+                    <p class="card-text">${result.text}</p>
+                    <p class="text-muted">ایجاد شده در: ${result.created_at}</p>
+                `;
+                commentList.prepend(newComment);
+                form.reset();
+            } else {
+                alert("خطا در ثبت نظر: " + JSON.stringify(result.errors));
+            }
+        });
+    }
+});
+</script>
 
 {% endblock %}
