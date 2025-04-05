@@ -1,7 +1,7 @@
 <div class="sidebar">
         <h2>پنل کاربر</h2>
         <a href="{% url 'accounts:dashboard_page' %}">داشبورد</a>
-        <a href="#orders">سفارش‌ها</a>
+        <a href="{% url 'accounts:show_orders' %}">سفارش‌ها</a>
         <a href="{% url 'accounts:edit_profile_page' %}">پروفایل</a>
         <a href="#wishlist">علاقه‌مندی‌ها</a>
         <a href="#messages">پیام‌ها</a>

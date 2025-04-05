@@ -3,6 +3,7 @@ from .forms import LoginForm, RegisterForm, EditProfile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from shop.models import Product ,Order, OrderItem
 
 
 def login_page(request):
@@ -66,7 +67,9 @@ def register_page(request):
 
 @login_required
 def dashboard_page(request):
-    return render(request, 'accounts/dashboard/dashboard_page.html')
+    orders = Order.objects.filter(user=request.user)
+
+    return render(request, 'accounts/dashboard/dashboard_page.html', context={'orders': orders})
 
 
 @login_required
@@ -85,3 +88,11 @@ def edit_profile_page(request):
             return redirect('accounts:edit_profile_page')
 
     return render(request, 'accounts/dashboard/edit_profile.html', context={'form': form})
+
+
+@login_required
+def show_orders(request):
+
+    orders = Order.objects.filter(user=request.user)
+
+    return render(request, 'accounts/dashboard/order_page.html', context={'orders': orders})

@@ -1,24 +1,12 @@
 {% extends 'accounts/dashboard/base/base.html' %}
-{% block title %}داشبورد{% endblock %}
-{% block banner_title %}به صفحه خودتان خوش آمدید!{% endblock %}
+{% load static %}
+{% block title %}سفارشات{% endblock %}
+
+{% block banner_title %}سفارشات{% endblock %}
+
 {% block content %}
-    <section id="dashboard" class="card">
-            <h2>داشبورد</h2>
-            <div class="stats">
-                <div class="stat-item">
-                    <h3>5</h3>
-                    <p>سفارش‌های اخیر</p>
-                </div>
-                <div class="stat-item">
-                    <h3>1,200,000 تومان</h3>
-                    <p>مبلغ کل خرید</p>
-                </div>
-                <div class="stat-item">
-                    <h3>12</h3>
-                    <p>محصول خریداری‌شده</p>
-                </div>
-            </div>
-        </section>
+
+{#        <form method="post" class="delete">#}
             <section id="orders" class="card">
             <h2>سفارش‌ها</h2>
             <table>
@@ -42,4 +30,6 @@
                 </tbody>
             </table>
         </section>
+
+{#        </form>#}
 {% endblock %}
