@@ -55,37 +55,37 @@
 </section>
 
 <script>
+    const isAuthenticated = {{ is_authenticated|yesno:"true,false" }};
 document.getElementById("checkout-btn").addEventListener("click", function () {
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];  // سبد خرید از localStorage
+    if (!isAuthenticated) {
+        alert("برای ثبت سفارش ابتدا وارد حساب کاربری خود شوید.");
+        window.location.href = "/login/?next={{ request.path }}";
+        return;
+    }
 
-        if (cart.cart.length === 0) {
+    fetch("get_cart_items/")
+    .then(response => response.json())
+    .then(data => {
+        if (data.items.length === 0) {
             alert("سبد خرید شما خالی است!");
             return;
         }
 
-        let orderData = {
-            items: cart.map(item => ({
-                variant_id: item.variant.id,  // آی‌دی واریانت
-                quantity: item.quantity       // تعداد محصول
-            }))
-        };
-
-        fetch("/confirm/", {  // آدرس API بک‌اند
+        fetch("confirm/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken")  // ارسال CSRF برای امنیت در جنگو
+                "X-CSRFToken": getCookie("csrftoken")
             },
-            body: JSON.stringify(orderData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);  // پیام موفقیت یا خطا را نشان می‌دهد
-            localStorage.removeItem("cart");  // بعد از پرداخت، سبد خرید را پاک کن
-            window.location.href = "/order-confirmation/";  // انتقال به صفحه تأیید سفارش
-        })
-        .catch(error => console.error("خطا در ارسال سفارش:", error));
+            body: JSON.stringify({items: data.items})
+        }).then(response => response.json())
+          .then(data => {
+              alert(data.message);
+              window.location.href = "/order-confirmation/";
+          });
     });
+});
+
     document.querySelectorAll(".increase-quantity").forEach(button => {
         button.addEventListener("click", function () {
             let cartItem = this.closest(".cart-item");

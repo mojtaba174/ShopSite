@@ -10,6 +10,7 @@ from .models import CartItem
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from .serializer import CartItemSerializer
 
 
 def cart_page(request):
@@ -17,10 +18,10 @@ def cart_page(request):
         cart = request.user.cart_item.all()
     else:
         cart = Cart(request)
-    return render(request, 'cart/cart_page.html', context={'cart': cart})
+    return render(request, 'cart/cart_page.html', context={'cart': cart, 'is_authenticated': request.user.is_authenticated})
 
 
-def add_to_cart(request, slug):
+def add_to_cart(request):
     if request.method == "POST":
         variant_id = request.POST.get("variant_id")
         variant = get_object_or_404(ProductVariant, id=variant_id)
@@ -31,7 +32,7 @@ def add_to_cart(request, slug):
                 defaults={"quantity": 0, "total_price": 0}
             )
 
-            if cart_item.quantity < variant.quantity:  # بررسی موجودی
+            if cart_item.quantity < variant.quantity:
                 cart_item.quantity += 1
                 cart_item.total_price = cart_item.quantity * variant.price
                 cart_item.save()
@@ -46,7 +47,10 @@ def add_to_cart(request, slug):
 
         else:
             cart = Cart(request)
-            current_quantity = cart.cart[f"{variant.product.id}-{variant_id}"]['quantity']
+            if f"{variant.product.id}-{variant_id}" in cart.cart.keys():
+                current_quantity = cart.cart[f"{variant.product.id}-{variant_id}"]['quantity']
+            else:
+                current_quantity = 0
 
             if current_quantity < variant.quantity:
                 cart.add(variant.product, variant.id, 1)
@@ -129,7 +133,7 @@ def confirm(request):
         order_items = []
 
         for item in items:
-            variant = get_object_or_404(ProductVariant, id=item['variant_id'])
+            variant = get_object_or_404(ProductVariant, id=item['variant'])
             quantity = item.get('quantity', 1)
             price = variant.price
 
@@ -141,3 +145,10 @@ def confirm(request):
         order.save()
 
     return Response({"message": "سفارش شما با موفقیت ثبت شد!", "order_id": order.id}, status=status.HTTP_201_CREATED)
+
+
+@login_required
+def get_cart_items(request):
+    items = CartItem.objects.filter(user=request.user)
+    data = CartItemSerializer(items, many=True).data
+    return JsonResponse({'items': data})
