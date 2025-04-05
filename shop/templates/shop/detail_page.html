@@ -343,7 +343,8 @@ function showToast(message, type = 'success') {
         </div>
     </div>
     </div>
-<script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('comment-form');
     if (form) {
@@ -375,8 +376,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
                 commentList.prepend(newComment);
                 form.reset();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'نظر شما ثبت شد!',
+                    text: 'ممنون از بازخورد شما ❤️',
+                    confirmButtonText: 'بستن',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    allowOutsideClick: true,
+                    allowEscapeKey: true,
+                    allowEnterKey: true,
+                    backdrop: true,
+                    didClose: () => {
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+
             } else {
-                alert("خطا در ثبت نظر: " + JSON.stringify(result.errors));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'خطا در ثبت نظر!',
+                    text: 'لطفاً فرم را با دقت پر کنید.',
+                    confirmButtonText: 'متوجه شدم',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    allowOutsideClick: true,
+                    allowEscapeKey: true,
+                    allowEnterKey: true,
+                    backdrop: true,
+                    didClose: () => {
+                        document.body.style.overflow = 'auto';
+                    }
+                });
             }
         });
     }
