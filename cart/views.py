@@ -20,7 +20,7 @@ def cart_page(request):
     return render(request, 'cart/cart_page.html', context={'cart': cart})
 
 
-def add_to_cart(request, slug):
+def add_to_cart(request):
     if request.method == "POST":
         variant_id = request.POST.get("variant_id")
         variant = get_object_or_404(ProductVariant, id=variant_id)
@@ -31,7 +31,7 @@ def add_to_cart(request, slug):
                 defaults={"quantity": 0, "total_price": 0}
             )
 
-            if cart_item.quantity < variant.quantity:  # بررسی موجودی
+            if cart_item.quantity < variant.quantity:
                 cart_item.quantity += 1
                 cart_item.total_price = cart_item.quantity * variant.price
                 cart_item.save()
@@ -46,7 +46,10 @@ def add_to_cart(request, slug):
 
         else:
             cart = Cart(request)
-            current_quantity = cart.cart[f"{variant.product.id}-{variant_id}"]['quantity']
+            if f"{variant.product.id}-{variant_id}" in cart.cart.keys():
+                current_quantity = cart.cart[f"{variant.product.id}-{variant_id}"]['quantity']
+            else:
+                current_quantity = 0
 
             if current_quantity < variant.quantity:
                 cart.add(variant.product, variant.id, 1)

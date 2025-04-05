@@ -11,7 +11,6 @@ def transfer_cart_items(sender, request, user, **kwargs):
     for item in session_cart:
         CartItem.objects.update_or_create(
             user=user,
-            product=item["product"],
             variant=item["variant"],
             defaults={"quantity": item["quantity"], "total_price": item["total_price"]},
         )

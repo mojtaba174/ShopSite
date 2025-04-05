@@ -10,4 +10,4 @@ class CartItem(models.Model):
     total_price = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return f"{self.user.username} - {self.product.title} ({self.quantity})"
+        return f"{self.user.username} - {self.variant.product.title} ({self.quantity})"
