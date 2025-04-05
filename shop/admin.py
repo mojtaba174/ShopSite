@@ -25,7 +25,6 @@ class CommentInline(admin.TabularInline):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    # inlines = [ProductImageInline, ProductTechnical, ProductVariant, ]
     inlines = [ProductImageInline, ProductTechnical, ProductVariant, CommentInline]
     prepopulated_fields = {"slug": ("title",)}
 
@@ -35,12 +34,21 @@ class UserCommentInline(admin.TabularInline):
     extra = 1
 
 
-# @admin.register(Comment)
-# class CommentAdmin(admin.ModelAdmin):
-#     list_display = ('user', 'product', 'rating', 'created_at')
-#     list_filter = ('product', 'user', 'rating', 'created_at')
-#     search_fields = ('user__username', 'product__title', 'content')
-#     ordering = ('-created_at',)
+class OrderItem(admin.TabularInline):
+    model = models.OrderItem
+    extra = 0
+    can_delete = False
+
+    def has_add_permission(self, request, obj):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [OrderItem]
 
 
 admin.site.register(models.DigitCategory)
@@ -48,4 +56,3 @@ admin.site.register(models.ProductVariant)
 admin.site.register(models.Color)
 admin.site.register(models.ProductImage)
 admin.site.register(models.Brand)
-admin.site.register(models.Order)

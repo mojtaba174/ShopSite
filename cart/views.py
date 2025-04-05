@@ -10,6 +10,7 @@ from .models import CartItem
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from .serializer import CartItemSerializer
 
 
 def cart_page(request):
@@ -17,7 +18,7 @@ def cart_page(request):
         cart = request.user.cart_item.all()
     else:
         cart = Cart(request)
-    return render(request, 'cart/cart_page.html', context={'cart': cart})
+    return render(request, 'cart/cart_page.html', context={'cart': cart, 'is_authenticated': request.user.is_authenticated})
 
 
 def add_to_cart(request):
@@ -132,7 +133,7 @@ def confirm(request):
         order_items = []
 
         for item in items:
-            variant = get_object_or_404(ProductVariant, id=item['variant_id'])
+            variant = get_object_or_404(ProductVariant, id=item['variant'])
             quantity = item.get('quantity', 1)
             price = variant.price
 
@@ -144,3 +145,10 @@ def confirm(request):
         order.save()
 
     return Response({"message": "سفارش شما با موفقیت ثبت شد!", "order_id": order.id}, status=status.HTTP_201_CREATED)
+
+
+@login_required
+def get_cart_items(request):
+    items = CartItem.objects.filter(user=request.user)
+    data = CartItemSerializer(items, many=True).data
+    return JsonResponse({'items': data})
