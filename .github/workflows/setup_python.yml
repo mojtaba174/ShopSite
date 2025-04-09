@@ -1,30 +1,52 @@
-name: Setup Python Environment
+name: Django CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  setup-env:
+  test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+      DJANGO_SECRET_KEY: dummy
+      DEBUG: "True"
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: '3.10'
 
-      - name: Create Virtual Environment
-        run: python -m venv venv
-
-      - name: Activate Virtual Environment and Install Dependencies
+      - name: Install dependencies
         run: |
-          source venv/bin/activate
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify Installation
+      - name: Run migrations
         run: |
-          source venv/bin/activate
-          python -m pip list
+          python manage.py migrate
+
+      - name: Run tests
+        run: |
+          python manage.py test
